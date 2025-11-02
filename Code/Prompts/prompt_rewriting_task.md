@@ -1,5 +1,3 @@
-### Prompt: Persuasive Rewriting Task
-
 Cialdini defines seven principles of persuasion: **Reciprocity**, **Social Proof**, **Scarcity**, **Authority**, **Unity**, **Liking**, and **Commitment**.  
 
 Your task is to **rewrite the following request seven times**, each time applying **one specific principle** from the list above.  
