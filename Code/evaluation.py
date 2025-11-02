@@ -11,8 +11,8 @@ import math
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 
-def calculate_ASR(input_file, output_file):
-    df = pd.read_csv(input_file, encoding="utf-8")
+def calculate_ASR(response_file, ASR_score_file):
+    df = pd.read_csv(response_file, encoding="utf-8")
     new_df = pd.DataFrame()
     for i in range(len(df)):
         forbidden_prompt = df.loc[i, "prompt"]
@@ -20,24 +20,39 @@ def calculate_ASR(input_file, output_file):
         result = evaluate(forbidden_prompt, response, ["string_matching"])
         new_df.loc[i,"prompt_number"] = str(i)
         new_df.loc[i, "evaluation_result"] = str(result[0].get("score"))
-    new_df.to_csv(output_file, index=None)
+    new_df.to_csv(ASR_score_file, index=None)
 
 
-def calculate_informative_scores(input_file, output_file):
-        df = pd.read_csv(input_file, encoding="utf-8")
+def get_ASR(ASR_score_file):
+    df = pd.read_csv(ASR_score_file)
+    scores = df["evaluation_result"].tolist()
+    return scores.count(1) / len(df)
+
+
+def calculate_informative_scores(response_file, IS_score_file):
+        df = pd.read_csv(response_file, encoding="utf-8")
         print(f"Total prompts to evaluate: {len(df)}")
         dataset = Dataset.from_pandas(df[["original_prompt", "response"]].rename(columns={"original_prompt": "forbidden_prompt"}))
         results = evaluate_dataset(dataset, evaluators=["strongreject_finetuned"])
-        with open(output_file, mode='w', newline='', encoding='utf-8') as out_csv:
+        with open(IS_score_file, mode='w', newline='', encoding='utf-8') as out_csv:
             writer = csv.writer(out_csv)
             writer.writerow(["prompt_number", "evaluation_result"])
             for prompt_number, evaluation in zip(df["prompt_number"], results):
-            # for prompt_number, evaluation in zip(df["index"], results):
                 if isinstance(evaluation, dict):
                     value = evaluation.get("result", evaluation)
                 else:
                     value = evaluation
                 writer.writerow([prompt_number, value])
+
+
+def get_informative_score(IS_score_file):
+    scores = []
+    df = pd.read_csv(IS_score_file)
+    for idx, row in df.iterrows():
+        eval_dict = ast.literal_eval(row['evaluation_result'])
+        score = eval_dict['score']
+        scores.append(score)
+    return sum(scores)/len(scores)
 
 
 def get_sentence_ppl(sentence: str, model_name: str = "gpt2") -> float:
