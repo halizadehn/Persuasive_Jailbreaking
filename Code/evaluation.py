@@ -11,6 +11,36 @@ import math
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 
+def sentence_ppl(sentence: str, model_name: str = "gpt2") -> float:
+    tokenizer = GPT2Tokenizer.from_pretrained(model_name)
+    model = GPT2LMHeadModel.from_pretrained(model_name)
+    model.eval()
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+
+    inputs = tokenizer(sentence, return_tensors="pt")
+    input_ids = inputs["input_ids"].to(device)
+
+    with torch.no_grad():
+        outputs = model(input_ids, labels=input_ids)
+        loss = outputs.loss
+
+    perplexity = math.exp(loss.item())
+    return perplexity
+
+
+def get_PPL(prompt_file):
+    df = pd.read_csv(prompt_file, encoding="utf-8")
+    print(f"Total prompts to evaluate: {len(df)}")
+    ppl = 0
+    for i in range(len(df)):
+        prompt = df.loc[i, "jailbreak_prompt"]
+        p = calculate_sentence_ppl(prompt, "gpt2")
+        ppl += p
+    return ppl/len(df)
+
+
 def calculate_ASR(response_file, ASR_score_file):
     df = pd.read_csv(response_file, encoding="utf-8")
     new_df = pd.DataFrame()
@@ -55,31 +85,4 @@ def get_informative_score(IS_score_file):
     return sum(scores)/len(scores)
 
 
-def get_sentence_ppl(sentence: str, model_name: str = "gpt2") -> float:
-    tokenizer = GPT2Tokenizer.from_pretrained(model_name)
-    model = GPT2LMHeadModel.from_pretrained(model_name)
-    model.eval()
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
-
-    inputs = tokenizer(sentence, return_tensors="pt")
-    input_ids = inputs["input_ids"].to(device)
-
-    with torch.no_grad():
-        outputs = model(input_ids, labels=input_ids)
-        loss = outputs.loss
-
-    perplexity = math.exp(loss.item())
-    return perplexity
-
-
-def calculate_PPL(input_file):
-    df = pd.read_csv(input_file, encoding="utf-8")
-    print(f"Total prompts to evaluate: {len(df)}")
-    ppl = 0
-    for i in range(len(df)):
-        prompt = df.loc[i, "jailbreak_prompt"]
-        p = calculate_sentence_ppl(prompt, "gpt2")
-        ppl += p
-    return ppl/len(df)
