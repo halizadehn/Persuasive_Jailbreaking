@@ -38,8 +38,8 @@ This repository contains the implementation and evaluation framework for studyin
 
 - [evaluation.py](./Code/evaluation.py): Evaluates collected responses using metrics such as Attack Success Rate (ASR), Informativeness Score (IS), and Influence Power (IP) to quantify the effectiveness and impact of various persuasion strategies across models.
 
-- [Attack baselines/](././Code/Attack baselines/): Contains baseline implementations of traditional adversarial prompt generation techniques, serving as benchmarks to compare against persuasion-aware jailbreak methods.
+- [Attack baselines](./Code/Attack baselines/): Contains baseline implementations of traditional adversarial prompt generation techniques, serving as benchmarks to compare against persuasion-aware jailbreak methods.
   
-- [Defense baselines/](././Code/Defense baselines/): Includes implementations of defense strategies used to evaluate the robustness of LLMs against persuasion-based attacks.
+- [Defense baselines](./Code/Defense baselines/): Includes implementations of defense strategies used to evaluate the robustness of LLMs against persuasion-based attacks.
 
 
