@@ -34,12 +34,12 @@ This repository contains the implementation and evaluation framework for studyin
 
 - [persuasive_prompt_generation.py](./Code/persuasive_prompt_generation.py): Generates persuasive variants of harmful queries based on Cialdini’s persuasion principles. These variants are used to analyze how different persuasion strategies influence LLM compliance with harmful instructions.
 
-- [get_model_responses.py](./Code/model_responses_collector.py): Handles the process of querying LLMs with both original and persuasion-based prompts, collecting model outputs to measure refusal behavior and susceptibility to persuasion-driven jailbreaks.
+- [model_response_collector.py](./Code/model_response_collector.py): Handles the process of querying LLMs with both original and persuasion-based prompts, collecting model outputs to measure refusal behavior and susceptibility to persuasion-driven jailbreaks.
 
 - [evaluation.py](./Code/evaluation.py): Evaluates collected responses using metrics such as Attack Success Rate (ASR), Informativeness Score (IS), and Influence Power (IP) to quantify the effectiveness and impact of various persuasion strategies across models.
 
-- [Code/Attack baselines/](./Code/Attack baselines/): Contains baseline implementations of traditional adversarial prompt generation techniques, serving as benchmarks to compare against persuasion-aware jailbreak methods.
+- [Attack baselines/](././Code/Attack baselines/): Contains baseline implementations of traditional adversarial prompt generation techniques, serving as benchmarks to compare against persuasion-aware jailbreak methods.
   
-- [Code/Defense baselines/](./Code/Defense baselines/): Includes implementations of defense strategies used to evaluate the robustness of LLMs against persuasion-based attacks.
+- [Defense baselines/](././Code/Defense baselines/): Includes implementations of defense strategies used to evaluate the robustness of LLMs against persuasion-based attacks.
 
 
